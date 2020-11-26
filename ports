@@ -1,0 +1,2 @@
+mkfifo fifo 
+busybox nc -ll -p 30004 < fifo | busybox nc -ll -p 30005 > fifo
